@@ -3,9 +3,9 @@ from loguru import logger
 import pandas as pd
 from scholar_wizard import PATHS, config
 from scholar_wizard.libs.file_handling import load_src_file, save_search_output
-from scholar_wizard.scholar import use_proxy
+from scholar_wizard.libs.scholar_utils import use_proxy
 from scholar_wizard.libs.utils import save_metadata
-from scholar_wizard.logs import clean_log_file 
+from scholar_wizard.libs.logs import clean_log_file 
 from scholar_wizard.search import search_google_scholar
 
 
