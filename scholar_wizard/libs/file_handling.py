@@ -1,4 +1,3 @@
-import time
 import os
 from loguru import logger
 import pandas as pd
@@ -21,26 +20,21 @@ def load_src_file() -> pd.DataFrame:
         raise e
 
 
-def save_output(
-    out_df: pd.DataFrame, output_path_wo_suffix: str, file_suffix: str = None
-) -> None:
+def save_output(out_df: pd.DataFrame, full_path: str) -> None:
     """
     Save the output data frame to a CSV file.
 
     Args:
     - out_df (pd.DataFrame): The data frame to save.
-    - output_path_wo_suffix (str): The path to save the file to, without the suffix.
-        Example: "output/search_results"
-    - file_suffix (str): The suffix to add to the file name. If None, the current date and time will be used.
+    - full_path (str): The path to save the file to, including the .csv suffix.
     """
-    file_suffix = file_suffix or time.strftime("%Y%m%d-%H%M%S")
-    full_path = f"{output_path_wo_suffix}_{file_suffix}.csv"
+    assert full_path.endswith(".csv"), "Output file must be a CSV file"
+
+    save_dir = os.path.dirname(full_path)
+
     logger.debug(f"Saving output file to {full_path}")
-    if not os.path.exists(PATHS.OUTPUT_DIR):
-        os.makedirs(PATHS.OUTPUT_DIR)
+
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+
     out_df.to_csv(full_path, index=False)
-
-
-def save_search_output(out_df: pd.DataFrame, file_suffix: str = None) -> None:
-    """Save the search output to a CSV file."""
-    save_output(out_df, PATHS.SEARCH_OUTPUT_FILE, file_suffix)

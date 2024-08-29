@@ -4,12 +4,12 @@ import requests
 from loguru import logger
 import pandas as pd
 from scholarly import scholarly
-from search import PATHS
+from scholar_wizard import PATHS
 
 
 def search_google_scholar(
-    journal_name: str,
     query: str,
+    journal_name: str = None,
     idx: int = 0,
     save_results_to_pdf: bool = False,
     output_dir: str = PATHS.PDF_DOWNLOADS_DIR,
@@ -18,8 +18,8 @@ def search_google_scholar(
     Searches Google Scholar for articles from a specified journal matching the provided query.
 
     Args:
-        journal_name (str): The name of the journal to search within.
         query (str): The search query string, usually including keywords and logical operators.
+        journal_name (str, optional): The name of the journal to search within. If not provided, search all sources.
         idx (int, optional): The index of the first search result to return.
         save_results_to_pdf (bool, optional): Whether to download available PDFs (default: False).
         output_dir (str, optional): Directory where PDFs should be saved (default: 'pdf_downloads').
@@ -38,11 +38,12 @@ def search_google_scholar(
     """
     assert isinstance(idx, int) and (idx >= 0), "The index must be a positive integer."
 
-    # Combine the journal name and query
-    search_query = f'source:" {journal_name}" {query}'
+    # Combine the journal name and query if provided
+    if journal_name:
+        query = f'source:" {journal_name}" {query}'
 
     # Search Google Scholar
-    search_results = scholarly.search_pubs(search_query)
+    search_results = scholarly.search_pubs(query)
     logger.info(f"Found {search_results.total_results} results")
 
     results = []
