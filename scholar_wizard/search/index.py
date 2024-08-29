@@ -1,12 +1,12 @@
 import time
 from loguru import logger
 import pandas as pd
-from src import PATHS, config
-from src.libs.file_handling import load_src_file, save_search_output
-from src.scholar import use_proxy
-from src.libs.utils import save_metadata
-from src.logs import clean_log_file 
-from src.search import search_google_scholar
+from scholar_wizard import PATHS, config
+from scholar_wizard.libs.file_handling import load_src_file, save_search_output
+from scholar_wizard.scholar import use_proxy
+from scholar_wizard.libs.utils import save_metadata
+from scholar_wizard.logs import clean_log_file 
+from scholar_wizard.search import search_google_scholar
 
 
 def search(query: str)->None:

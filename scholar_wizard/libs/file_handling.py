@@ -2,7 +2,7 @@ import time
 import os
 from loguru import logger
 import pandas as pd
-from src import PATHS, STATIC, config
+from scholar_wizard import PATHS, STATIC, config
 
 
 def load_src_file() -> pd.DataFrame:

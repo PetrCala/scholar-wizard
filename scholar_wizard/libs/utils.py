@@ -1,7 +1,7 @@
 import time
 from loguru import logger
 import pandas as pd
-from src import PATHS, config
+from scholar_wizard import PATHS, config
 
 
 def save_metadata(out_df: pd.DataFrame, file_suffix: str = None) -> None:
