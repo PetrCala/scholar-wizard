@@ -12,7 +12,7 @@ def search_google_scholar(
     journal_name: str = None,
     idx: int = 0,
     save_results_to_pdf: bool = False,
-    output_dir: str = PATHS.PDF_DOWNLOADS_DIR,
+    output_path: str = None,
 ) -> pd.DataFrame:
     """
     Searches Google Scholar for articles from a specified journal matching the provided query.
@@ -22,7 +22,7 @@ def search_google_scholar(
         journal_name (str, optional): The name of the journal to search within. If not provided, search all sources.
         idx (int, optional): The index of the first search result to return.
         save_results_to_pdf (bool, optional): Whether to download available PDFs (default: False).
-        output_dir (str, optional): Directory where PDFs should be saved (default: 'pdf_downloads').
+        output_path (str, optional): Directory where PDFs should be saved (default: None).
 
 
     Returns:
@@ -49,10 +49,16 @@ def search_google_scholar(
     results = []
     pdf_count = 0
 
-    # Create the output directory if it does not exist
-    journal_output_dir = os.path.join(output_dir, journal_name.replace(" ", "_"))
-    if save_results_to_pdf and not os.path.exists(journal_output_dir):
-        os.makedirs(journal_output_dir)
+    if save_results_to_pdf:
+        assert isinstance(
+            output_path, str
+        ), "The output path must be provided if you wish to save PDF files."
+        # Create the output directory if it does not exist
+        journal_output_dir = os.path.join(
+            output_path, PATHS.PDF_DOWNLOADS_FOLDER, journal_name.replace(" ", "_")
+        )
+        if not os.path.exists(journal_output_dir):
+            os.makedirs(journal_output_dir)
 
     for index, result in enumerate(search_results):
         # related_articles = scholarly.get_related_articles(result)

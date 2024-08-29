@@ -2,7 +2,7 @@ import os
 import time
 from loguru import logger
 import pandas as pd
-from scholar_wizard import config
+from scholar_wizard import PATHS, STATIC
 from scholar_wizard.libs.file_handling import save_output
 from scholar_wizard.libs.scholar_utils import setup_proxy
 from scholar_wizard.libs.utils import save_metadata
@@ -18,7 +18,7 @@ def search(
     save_output_metadata: bool = True,
     save_results_to_pdf: bool = True,
     use_proxy: bool = True,
-    # log_file_path: str = None,
+    date_format: str = STATIC.DATE_FORMAT,
 ) -> pd.DataFrame:
     """
     Search Google Scholar for articles from a specified journal matching the provided query.
@@ -31,6 +31,7 @@ def search(
     - save_output_metadata (bool, optional): Whether to save the metadata of the search results (default: True).
     - save_results_to_pdf (bool, optional): Whether to download available PDFs (default: True).
     - use_proxy (bool, optional): Whether to use a proxy server (default: True).
+    - date_format (str, optional): The date format to use for the output files.
 
     Returns:
     - pd.DataFrame: A DataFrame where each row represents a search result with the following columns:
@@ -43,17 +44,31 @@ def search(
         - 'Additional Data': Placeholder for additional data (str)
         - 'Full Citation': Full citation of the article
     """
+    assert isinstance(query, str), "The search query must be a string."
+    assert output_path, "The output path must be provided."
+    assert isinstance(
+        journals, (list, type(None))
+    ), "The journals must be a list of strings or None."
+    assert isinstance(
+        save_output_to_df, bool
+    ), "The save_output_to_df flag must be a boolean."
+    assert isinstance(
+        save_output_metadata, bool
+    ), "The save_output_metadata flag must be a boolean."
+    assert isinstance(
+        save_results_to_pdf, bool
+    ), "The save_results_to_pdf flag must be a boolean."
+    assert isinstance(use_proxy, bool), "The use_proxy flag must be a boolean."
+
     logger.info("Running literature search")
     logger.info(f"Using the following search query: {query}")
-
-    assert output_path, "The output path must be provided."
 
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
-    run_key = time.strftime("%Y%m%d-%H%M")
+    run_key = time.strftime(date_format)
 
-    log_file_path = f"{output_path}/literature_search_{run_key}.log"
+    log_file_path = f"{output_path}/{PATHS.LOG_FILE_NAME}_{run_key}.log"
 
     if log_file_path:
         logger.debug("Setting up logging to a file")
@@ -72,6 +87,7 @@ def search(
             query=query,
             idx=idx,
             save_results_to_pdf=save_results_to_pdf,
+            output_path=output_path,
         )
 
     logger.info("Starting literature search")
@@ -91,11 +107,15 @@ def search(
         merged_results = do_search(journal_name=None, idx=0)  # Search all sources
 
     if save_output_to_df:
-        output_df_path = f"{output_path}/literature_search_results_{run_key}.csv"
+        output_df_path = f"{output_path}/{PATHS.SERACH_OUTPUT_FILE}_{run_key}.csv"
         save_output(out_df=merged_results, full_path=output_df_path)
     if save_output_metadata:
-        output_metadata_path = f"{output_path}/literature_search_metadata_{run_key}.txt"
-        save_metadata(out_df=merged_results, full_path=output_metadata_path)
+        output_metadata_path = f"{output_path}/{PATHS.METADATA_FILE}_{run_key}.txt"
+        save_metadata(
+            out_df=merged_results,
+            full_path=output_metadata_path,
+            journal_count=len(journals),
+        )
 
     logger.success("Literature search completed")
 
