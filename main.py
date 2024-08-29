@@ -1,8 +1,7 @@
 import os
 import argparse
 from loguru import logger
-from scholar_wizard import PATHS, config
-from scholar_wizard import search
+from scholar_wizard import PATHS, config, search
 
 if __name__ == "__main__":
 
