@@ -4,9 +4,28 @@ Facilitate searching the Google Scholar database
 
 ## How to run
 
-- **Search**:
-  - _Description_: Search the Google Scholar database using a custom query
-  - _Command_: `python main.py --search`
-- **Snowball**:
-  - _Description_: Snowball from a study set.
-  - _Command_: `python main.py --snowball`
+Here is a simple list of functionalities this package provides.
+
+### Search
+
+Search the Google Scholar database using a custom query
+
+Example:
+
+```python
+from scholar_wizard import search
+
+search()
+```
+
+### Snowball
+
+Snowball from a study set.
+
+Example:
+
+```python
+from scholar_wizard import snowball
+
+snowball()
+```
