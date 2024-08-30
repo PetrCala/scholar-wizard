@@ -18,6 +18,7 @@ def search(
     save_output_metadata: bool = True,
     save_results_to_pdf: bool = True,
     use_proxy: bool = True,
+    max_pdf_downloads: int = STATIC.MAX_PDF_DOWNLOADS_DEFAULT,
     date_format: str = STATIC.DATE_FORMAT,
 ) -> pd.DataFrame:
     """
@@ -31,6 +32,7 @@ def search(
     - save_output_metadata (bool, optional): Whether to save the metadata of the search results (default: True).
     - save_results_to_pdf (bool, optional): Whether to download available PDFs (default: True).
     - use_proxy (bool, optional): Whether to use a proxy server (default: True).
+    - max_pdf_downloads (int, optional): The maximum number of PDF files to download per journal/search (default: 50).
     - date_format (str, optional): The date format to use for the output files.
 
     Returns:
@@ -88,6 +90,7 @@ def search(
             idx=idx,
             save_results_to_pdf=save_results_to_pdf,
             output_path=output_path,
+            max_pdf_downloads=max_pdf_downloads,
         )
 
     logger.info("Starting literature search")

@@ -4,7 +4,7 @@ import requests
 from loguru import logger
 import pandas as pd
 from scholarly import scholarly
-from scholar_wizard import PATHS
+from scholar_wizard import PATHS, STATIC
 
 
 def search_google_scholar(
@@ -13,6 +13,7 @@ def search_google_scholar(
     idx: int = 0,
     save_results_to_pdf: bool = False,
     output_path: str = None,
+    max_pdf_downloads: int = STATIC.MAX_PDF_DOWNLOADS_DEFAULT,
 ) -> pd.DataFrame:
     """
     Searches Google Scholar for articles from a specified journal matching the provided query.
@@ -23,6 +24,7 @@ def search_google_scholar(
         idx (int, optional): The index of the first search result to return.
         save_results_to_pdf (bool, optional): Whether to download available PDFs (default: False).
         output_path (str, optional): Directory where PDFs should be saved (default: None).
+        max_pdf_downloads (int, optional): The maximum number of PDF files to download per journal/search (default: 50).
 
 
     Returns:
@@ -94,7 +96,7 @@ def search_google_scholar(
         if (
             save_results_to_pdf
             and pdf_link
-            and pdf_count < 50
+            and pdf_count < max_pdf_downloads
             and not os.path.exists(pdf_filename)
         ):
             logger.debug(f"Downloading PDF for {title}")
