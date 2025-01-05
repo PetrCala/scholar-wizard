@@ -71,8 +71,12 @@ def search_google_scholar(
         title = result["bib"]["title"]
         authors = result["bib"]["author"]
         year = result["bib"]["pub_year"]
+        journal = result["bib"]["venue"]
         citation = result["num_citations"]
         source = result["bib"]["venue"]
+
+        # Use the input journal name by default
+        journal_name = journal_name or journal or ""
 
         logger.info(f"Processing result: {title}")
 
