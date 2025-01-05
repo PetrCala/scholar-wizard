@@ -38,16 +38,11 @@ def add_arguments(parser):
         help="List of journals to limit the snowballing process. If omitted, all journals are considered.",
     )
     parser.add_argument(
-        "--use-proxy",
-        action="store_true",
-        default=True,
-        help="Flag to use a proxy server (default: True).",
-    )
-    parser.add_argument(
-        "--no-use-proxy",
+        "--no-proxy",
         action="store_false",
         dest="use_proxy",
-        help="Do not use a proxy server.",
+        default=True,
+        help="Flag to use a proxy server (default: True).",
     )
     parser.add_argument(
         "--date-format",

@@ -18,10 +18,6 @@ Welcome to **Scholar Wizard**! This guide will help you understand how to invoke
     - [Command-Specific Help](#command-specific-help)
   - [Examples](#examples)
     - [Example 1: Performing a Literature Search](#example-1-performing-a-literature-search)
-    - [Example 2: Initiating a Snowballing Process](#example-2-initiating-a-snowballing-process)
-  - [Advanced Usage](#advanced-usage)
-    - [Combining Multiple Flags](#combining-multiple-flags)
-    - [Specifying a Custom Date Format](#specifying-a-custom-date-format)
 
 ## Prerequisites
 
@@ -111,7 +107,7 @@ python -m scholar_wizard snowball [options]
 
 - `--output-path` (str, **required**): The directory path where snowballing results will be saved.
 - `--journals` (str, optional): List of journals to limit the snowballing process. Provide multiple journals separated by spaces.
-- `--use-proxy` / `--no-use-proxy` (bool, optional): Flag to use a proxy server. Defaults to `True`.
+- `--no-proxy` (bool, optional): Flag to disable using a proxy server. If not provided, a proxy server will be used by default.
 - `--date-format` (str, optional): The date format to use for the output files. Defaults to `YYYY-MM-DD`.
 
 ## Help and Documentation
@@ -170,73 +166,7 @@ python -m scholar_wizard search \
 - **`--output_path "./results"`**: Saves the search results in the `./results` directory.
 - **`--journals "Journal of AI" "Journal of ML"`**: Limits the search to these two journals.
 - **`--max_pdf_downloads 100`**: Sets the maximum number of PDF downloads per journal/search to 100.
-- **`--no-use_proxy`**: Disables the use of a proxy server.
-
-**Expected Output:**
-
-```
-INFO:scholar_wizard.search.search:Running literature search
-INFO:scholar_wizard.search.search:Using the following search query: machine learning
-INFO:scholar_wizard.search.search:Search results saved to ./results/search_results.csv
-```
-
-### Example 2: Initiating a Snowballing Process
-
-**Scenario:**  
-You want to perform a snowballing process to find related articles, limiting the search to the "Journal of AI". Save the results to the `./snowball_results` directory and disable the use of a proxy server.
-
-**Command:**
-
-```bash
-python -m scholar_wizard snowball \
-  --output_path "./snowball_results" \
-  --journals "Journal of AI" \
-  --no-use_proxy
-```
-
-**Explanation:**
-
-- **`--output_path "./snowball_results"`**: Saves the snowballing results in the `./snowball_results` directory.
-- **`--journals "Journal of AI"`**: Limits the snowballing process to the "Journal of AI".
-- **`--no-use_proxy`**: Disables the use of a proxy server.
-
-**Expected Output:**
-
-```
-INFO:scholar_wizard.snowball.snowball:Starting snowballing process
-INFO:scholar_wizard.snowball.snowball:Output path: ./snowball_results
-INFO:scholar_wizard.snowball.snowball:Limiting snowballing to journals: Journal of AI
-INFO:scholar_wizard.snowball.snowball:Using proxy: False
-INFO:scholar_wizard.snowball.snowball:Date format: YYYY-MM-DD
-Snowballing not implemented yet
-```
-
-## Advanced Usage
-
-### Combining Multiple Flags
-
-You can combine multiple flags to customize the behavior of commands. For example, to perform a search without saving metadata and PDFs:
-
-```bash
-python -m scholar_wizard search \
-  --query "deep learning" \
-  --output_path "./deep_learning_results" \
-  --no-save_output_metadata \
-  --no-save_results_to_pdf
-```
-
-### Specifying a Custom Date Format
-
-To specify a custom date format for output files:
-
-```bash
-python -m scholar_wizard search \
-  --query "neural networks" \
-  --output_path "./nn_results" \
-  --date_format "%d-%m-%Y"
-```
-
-**Note:** Ensure that the date format string adheres to Python's `strftime` directives.
+- **`--no-proxy`**: Disables the use of a proxy server.
 
 ---
 
