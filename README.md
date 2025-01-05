@@ -1,30 +1,253 @@
 # Scholar wizard
 
-Scholar Wizard is a custom package to help facilitate searching through the Google Scholar database.
+Welcome to **Scholar Wizard**! This guide will help you understand how to invoke the various functionalities of the Scholar Wizard package via the command-line interface (CLI). Whether you're performing literature searches or engaging in snowballing processes, this guide provides clear instructions and examples to get you started.
 
-## How to install
+## Table of Contents
 
-The package has not yet been posted to any package libraries. You can install the package using pip like so:
+- [Scholar wizard](#scholar-wizard)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Running Scholar Wizard](#running-scholar-wizard)
+    - [General Command Structure](#general-command-structure)
+    - [Available Commands](#available-commands)
+      - [1. Search](#1-search)
+      - [2. Snowball](#2-snowball)
+  - [Help and Documentation](#help-and-documentation)
+    - [General Help](#general-help)
+    - [Command-Specific Help](#command-specific-help)
+  - [Examples](#examples)
+    - [Example 1: Performing a Literature Search](#example-1-performing-a-literature-search)
+    - [Example 2: Initiating a Snowballing Process](#example-2-initiating-a-snowballing-process)
+  - [Advanced Usage](#advanced-usage)
+    - [Combining Multiple Flags](#combining-multiple-flags)
+    - [Specifying a Custom Date Format](#specifying-a-custom-date-format)
+
+## Prerequisites
+
+Before using Scholar Wizard, ensure you have the following:
+
+- **Python 3.7 or higher** installed on your system.
+- **pip** (Python package installer) available.
+- Necessary dependencies installed (see [Installation](#installation)).
+
+## Installation
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/yourusername/scholar_wizard.git
+   cd scholar_wizard
+   ```
+
+2. **Install Dependencies**
+
+   It's recommended to use a virtual environment:
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+   Install the required packages:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Install Scholar Wizard**
+
+   You can install Scholar Wizard in editable mode:
+
+   ```bash
+   pip install -e .
+   ```
+
+   This allows you to modify the source code and have changes reflected without reinstalling.
+
+## Running Scholar Wizard
+
+Scholar Wizard provides a flexible CLI that allows you to invoke different functionalities seamlessly. The general command structure is as follows:
 
 ```bash
-pip install git+https://github.com/PetrCala/scholar-wizard.git
+python -m scholar_wizard <command> [options]
 ```
 
-## Documentation
+### General Command Structure
 
-The package is still in development, so a thorough documentation would not stay up-to-date for too long.
+- **`python -m scholar_wizard`**: Invokes the Scholar Wizard package.
+- **`<command>`**: Specifies the functionality you want to execute (e.g., `search`, `snowball`).
+- **`[options]`**: Additional arguments and flags tailored to the chosen command.
 
-For a brief overview, here is a list of available functions:
+### Available Commands
 
-- **`search`**: Search the Google Scholar database using a custom query
-- **`snowball`**: Snowball from a study set.
+Currently, Scholar Wizard supports the following commands:
 
-You can run these functions by simply importing from the package like so:
+#### 1. Search
 
-```python
-# In a python module
-import scholar_wizard as sw
+**Description:**  
+Search Google Scholar for articles based on a query and various optional parameters.
 
-search_results = sw.search()
-snowballing_results = sw.snowball()
+**Usage:**
+
+```bash
+python -m scholar_wizard search [options]
 ```
+
+**Options:**
+
+- `--query` (str, **required**): The search query string, including keywords and logical operators.
+- `--output_path` (str, **required**): The directory path where results will be saved.
+- `--journals` (str, optional): List of journals to limit the search to. Provide multiple journals separated by spaces.
+- `--save_output_to_df` / `--no-save_output_to_df` (bool, optional): Flag to save the search results to a DataFrame. Defaults to `True`.
+- `--save_output_metadata` / `--no-save_output_metadata` (bool, optional): Flag to save the metadata of the search results. Defaults to `True`.
+- `--save_results_to_pdf` / `--no-save_results_to_pdf` (bool, optional): Flag to download available PDFs. Defaults to `True`.
+- `--use_proxy` / `--no-use_proxy` (bool, optional): Flag to use a proxy server. Defaults to `True`.
+- `--max_pdf_downloads` (int, optional): Maximum number of PDF files to download per journal/search. Defaults to `50`.
+- `--date_format` (str, optional): The date format to use for the output files. Defaults to `YYYY-MM-DD`.
+
+#### 2. Snowball
+
+**Description:**  
+Perform a snowballing process to find related articles based on existing references.
+
+**Usage:**
+
+```bash
+python -m scholar_wizard snowball [options]
+```
+
+**Options:**
+
+- `--output_path` (str, **required**): The directory path where snowballing results will be saved.
+- `--journals` (str, optional): List of journals to limit the snowballing process. Provide multiple journals separated by spaces.
+- `--use_proxy` / `--no-use_proxy` (bool, optional): Flag to use a proxy server. Defaults to `True`.
+- `--date_format` (str, optional): The date format to use for the output files. Defaults to `YYYY-MM-DD`.
+
+## Help and Documentation
+
+For detailed information about each command and its options, you can use the `--help` flag with any command.
+
+### General Help
+
+```bash
+python -m scholar_wizard --help
+```
+
+### Command-Specific Help
+
+Replace `<command>` with the desired command (e.g., `search`, `snowball`).
+
+```bash
+python -m scholar_wizard <command> --help
+```
+
+**Examples:**
+
+- **Search Help:**
+
+  ```bash
+  python -m scholar_wizard search --help
+  ```
+
+- **Snowball Help:**
+
+  ```bash
+  python -m scholar_wizard snowball --help
+  ```
+
+## Examples
+
+### Example 1: Performing a Literature Search
+
+**Scenario:**  
+You want to search for articles related to "machine learning" in the "Journal of AI" and "Journal of ML". Save the results to the `./results` directory, download PDFs, and disable the use of a proxy server.
+
+**Command:**
+
+```bash
+python -m scholar_wizard search \
+  --query "machine learning" \
+  --output_path "./results" \
+  --journals "Journal of AI" "Journal of ML" \
+  --max_pdf_downloads 100 \
+  --no-use_proxy
+```
+
+**Explanation:**
+
+- **`--query "machine learning"`**: Searches for articles containing "machine learning".
+- **`--output_path "./results"`**: Saves the search results in the `./results` directory.
+- **`--journals "Journal of AI" "Journal of ML"`**: Limits the search to these two journals.
+- **`--max_pdf_downloads 100`**: Sets the maximum number of PDF downloads per journal/search to 100.
+- **`--no-use_proxy`**: Disables the use of a proxy server.
+
+**Expected Output:**
+
+```
+INFO:scholar_wizard.search.search:Running literature search
+INFO:scholar_wizard.search.search:Using the following search query: machine learning
+INFO:scholar_wizard.search.search:Search results saved to ./results/search_results.csv
+```
+
+### Example 2: Initiating a Snowballing Process
+
+**Scenario:**  
+You want to perform a snowballing process to find related articles, limiting the search to the "Journal of AI". Save the results to the `./snowball_results` directory and disable the use of a proxy server.
+
+**Command:**
+
+```bash
+python -m scholar_wizard snowball \
+  --output_path "./snowball_results" \
+  --journals "Journal of AI" \
+  --no-use_proxy
+```
+
+**Explanation:**
+
+- **`--output_path "./snowball_results"`**: Saves the snowballing results in the `./snowball_results` directory.
+- **`--journals "Journal of AI"`**: Limits the snowballing process to the "Journal of AI".
+- **`--no-use_proxy`**: Disables the use of a proxy server.
+
+**Expected Output:**
+
+```
+INFO:scholar_wizard.snowball.snowball:Starting snowballing process
+INFO:scholar_wizard.snowball.snowball:Output path: ./snowball_results
+INFO:scholar_wizard.snowball.snowball:Limiting snowballing to journals: Journal of AI
+INFO:scholar_wizard.snowball.snowball:Using proxy: False
+INFO:scholar_wizard.snowball.snowball:Date format: YYYY-MM-DD
+Snowballing not implemented yet
+```
+
+## Advanced Usage
+
+### Combining Multiple Flags
+
+You can combine multiple flags to customize the behavior of commands. For example, to perform a search without saving metadata and PDFs:
+
+```bash
+python -m scholar_wizard search \
+  --query "deep learning" \
+  --output_path "./deep_learning_results" \
+  --no-save_output_metadata \
+  --no-save_results_to_pdf
+```
+
+### Specifying a Custom Date Format
+
+To specify a custom date format for output files:
+
+```bash
+python -m scholar_wizard search \
+  --query "neural networks" \
+  --output_path "./nn_results" \
+  --date_format "%d-%m-%Y"
+```
+
+**Note:** Ensure that the date format string adheres to Python's `strftime` directives.
+
+---
+
+By following this guide, you should be able to effectively utilize the Scholar Wizard CLI to perform literature searches and snowballing processes. For further assistance, refer to the project's [GitHub repository](https://github.com/yourusername/scholar_wizard) or contact the maintainer.
