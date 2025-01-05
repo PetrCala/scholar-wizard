@@ -6,3 +6,13 @@ class STATIC(TypedDict):
 
     DATE_FORMAT = "%Y%m%d"
     MAX_PDF_DOWNLOADS_DEFAULT = 50
+    STUDY_DF_COLUMNS = [
+        "Index",
+        "Formatted Author(s) and Year",
+        "Publication Year",
+        "Citation Count",
+        "Journal Name",
+        "Article Title",
+        "Additional Data",
+        "Full Citation",
+    ]

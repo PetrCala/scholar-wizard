@@ -124,23 +124,12 @@ def search_google_scholar(
             "",
             citation_full,
         ]
+        assert len(row) == len(STATIC.STUDY_DF_COLUMNS), "The row length is incorrect."
 
         # Append to results
         results.append(row)
 
     # Convert the list of results into a DataFrame
-    df = pd.DataFrame(
-        results,
-        columns=[
-            "Index",
-            "Formatted Author(s) and Year",
-            "Publication Year",
-            "Citation Count",
-            "Journal Name",
-            "Article Title",
-            "Additional Data",
-            "Full Citation",
-        ],
-    )
+    df = pd.DataFrame(results, columns=STATIC.STUDY_DF_COLUMNS)
 
     return df
