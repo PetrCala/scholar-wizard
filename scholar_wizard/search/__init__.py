@@ -1,2 +1,2 @@
 from .utils import search_google_scholar
-from .index import search
+from .search import add_arguments, run

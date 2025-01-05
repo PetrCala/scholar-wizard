@@ -1,1 +1,1 @@
-from .index import snowball
+from .snowball import add_arguments, run

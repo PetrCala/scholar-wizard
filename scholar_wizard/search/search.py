@@ -61,6 +61,10 @@ def search(
         save_results_to_pdf, bool
     ), "The save_results_to_pdf flag must be a boolean."
     assert isinstance(use_proxy, bool), "The use_proxy flag must be a boolean."
+    assert isinstance(
+        max_pdf_downloads, int
+    ), "The max_pdf_downloads must be an integer."
+    assert isinstance(date_format, str), "The date_format must be a string."
 
     logger.info("Running literature search")
     logger.info(f"Using the following search query: {query}")
@@ -123,3 +127,115 @@ def search(
     logger.success("Literature search completed")
 
     return merged_results
+
+
+def add_arguments(parser):
+    """
+    Adds command-line arguments for the search functionality.
+
+    Args:
+    - parser (argparse.ArgumentParser): The parser to add arguments to.
+    """
+    parser.add_argument(
+        "--query",
+        type=str,
+        required=True,
+        help="The search query string, including keywords and logical operators.",
+    )
+    parser.add_argument(
+        "--output_path",
+        type=str,
+        required=True,
+        help="The path to save the search results.",
+    )
+    parser.add_argument(
+        "--journals",
+        type=str,
+        nargs="*",
+        default=None,
+        help="List of journals to limit the search to. If omitted, search the entire database.",
+    )
+    parser.add_argument(
+        "--save_output_to_df",
+        action="store_true",
+        default=True,
+        help="Flag to save the search results to a DataFrame (default: True).",
+    )
+    parser.add_argument(
+        "--no-save_output_to_df",
+        action="store_false",
+        dest="save_output_to_df",
+        help="Do not save the search results to a DataFrame.",
+    )
+    parser.add_argument(
+        "--save_output_metadata",
+        action="store_true",
+        default=True,
+        help="Flag to save the metadata of the search results (default: True).",
+    )
+    parser.add_argument(
+        "--no-save_output_metadata",
+        action="store_false",
+        dest="save_output_metadata",
+        help="Do not save the metadata of the search results.",
+    )
+    parser.add_argument(
+        "--save_results_to_pdf",
+        action="store_true",
+        default=True,
+        help="Flag to download available PDFs (default: True).",
+    )
+    parser.add_argument(
+        "--no-save_results_to_pdf",
+        action="store_false",
+        dest="save_results_to_pdf",
+        help="Do not download available PDFs.",
+    )
+    parser.add_argument(
+        "--use_proxy",
+        action="store_true",
+        default=True,
+        help="Flag to use a proxy server (default: True).",
+    )
+    parser.add_argument(
+        "--no-use_proxy",
+        action="store_false",
+        dest="use_proxy",
+        help="Do not use a proxy server.",
+    )
+    parser.add_argument(
+        "--max_pdf_downloads",
+        type=int,
+        default=STATIC.MAX_PDF_DOWNLOADS_DEFAULT,
+        help=f"The maximum number of PDF files to download per journal/search (default: {STATIC.MAX_PDF_DOWNLOADS_DEFAULT}).",
+    )
+    parser.add_argument(
+        "--date_format",
+        type=str,
+        default=STATIC.DATE_FORMAT,
+        help=f"The date format to use for the output files (default: {STATIC.DATE_FORMAT}).",
+    )
+
+
+def run(args):
+    """
+    Executes the search functionality using parsed command-line arguments.
+
+    Args:
+    - args (argparse.Namespace): Parsed command-line arguments.
+    """
+    # Convert journals to list if it's not None
+    journals = args.journals if args.journals else None
+
+    # Call the search function with the parsed arguments
+    search(
+        query=args.query,
+        output_path=args.output_path,
+        journals=journals,
+        save_output_to_df=args.save_output_to_df,
+        save_output_metadata=args.save_output_metadata,
+        save_results_to_pdf=args.save_results_to_pdf,
+        use_proxy=args.use_proxy,
+        max_pdf_downloads=args.max_pdf_downloads,
+        date_format=args.date_format,
+    )
