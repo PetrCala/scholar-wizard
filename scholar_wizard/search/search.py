@@ -67,7 +67,7 @@ def search(
     assert isinstance(date_format, str), "The date_format must be a string."
 
     logger.info("Running literature search")
-    logger.info(f"Using the following search query: {query}")
+    logger.info(f"Using the following search query: '{query}'")
 
     if not os.path.exists(output_path):
         os.makedirs(output_path)
@@ -110,19 +110,20 @@ def search(
                 [merged_results, search_results], ignore_index=True
             )
             idx += search_results.shape[0]
+
+        if save_output_metadata:
+            output_metadata_path = f"{output_path}/{PATHS.METADATA_FILE}_{run_key}.txt"
+            save_metadata(
+                out_df=merged_results,
+                full_path=output_metadata_path,
+                journal_count=len(journals) if journals else 0,
+            )
     else:
         merged_results = do_search(journal_name=None, idx=0)  # Search all sources
 
     if save_output_to_df:
         output_df_path = f"{output_path}/{PATHS.SERACH_OUTPUT_FILE}_{run_key}.csv"
         save_output(out_df=merged_results, full_path=output_df_path)
-    if save_output_metadata:
-        output_metadata_path = f"{output_path}/{PATHS.METADATA_FILE}_{run_key}.txt"
-        save_metadata(
-            out_df=merged_results,
-            full_path=output_metadata_path,
-            journal_count=len(journals),
-        )
 
     logger.success("Literature search completed")
 
@@ -192,16 +193,11 @@ def add_arguments(parser):
         help="Do not download available PDFs.",
     )
     parser.add_argument(
-        "--use-proxy",
-        action="store_true",
-        default=True,
-        help="Flag to use a proxy server (default: True).",
-    )
-    parser.add_argument(
-        "--no-use-proxy",
+        "--no-proxy",
         action="store_false",
         dest="use_proxy",
-        help="Do not use a proxy server.",
+        default=True,
+        help="Flag to use a proxy server (default: True).",
     )
     parser.add_argument(
         "--max-pdf-downloads",

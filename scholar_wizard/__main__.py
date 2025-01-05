@@ -3,6 +3,9 @@ import importlib
 import pkgutil
 import sys
 
+# List of executable submodules
+SUBMODULES = ["search", "snowball"]
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -12,21 +15,20 @@ def main():
         title="Available Commands", dest="command", help="Description of commands"
     )
 
+    package = importlib.import_module(__package__)  # Current package
+    package_path = package.__path__
+
     # Dictionary to hold command names and their corresponding run functions
     commands = {}
 
-    # Dynamically import all sub-packages and collect their run functions
-    package = importlib.import_module(__name__)
-    package_path = package.__path__
-
     for finder, name, ispkg in pkgutil.iter_modules(package_path):
-        if ispkg:
+        if ispkg and name in SUBMODULES:
             try:
-                # Import the sub-package
-                module = importlib.import_module(f".{name}", package=__name__)
+                # module = importlib.import_module(f".{name}", package=package.__name__)
+
                 # Import the main module within the sub-package
                 func_module = importlib.import_module(
-                    f".{name}.{name}", package=__name__
+                    f".{name}.{name}", package=package.__name__
                 )
 
                 # Ensure the module has 'run' and 'add_arguments' functions

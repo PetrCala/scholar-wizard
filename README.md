@@ -102,7 +102,7 @@ python -m scholar_wizard search [options]
 - `--save-output-to-df` / `--no-save-output-to-df` (bool, optional): Flag to save the search results to a DataFrame. Defaults to `True`.
 - `--save-output-metadata` / `--no-save-output-metadata` (bool, optional): Flag to save the metadata of the search results. Defaults to `True`.
 - `--save-results-to-pdf` / `--no-save-results-to-pdf` (bool, optional): Flag to download available PDFs. Defaults to `True`.
-- `--use-proxy` / `--no-use-proxy` (bool, optional): Flag to use a proxy server. Defaults to `True`.
+- `--no-proxy` (bool, optional): Flag to disable using a proxy server. If not provided, a proxy server will be used by default.
 - `--max-pdf-downloads` (int, optional): Maximum number of PDF files to download per journal/search. Defaults to `50`.
 - `--date-format` (str, optional): The date format to use for the output files. Defaults to `YYYY-MM-DD`.
 

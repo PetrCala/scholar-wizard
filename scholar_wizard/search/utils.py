@@ -45,6 +45,7 @@ def search_google_scholar(
         query = f'source:" {journal_name}" {query}'
 
     # Search Google Scholar
+    logger.debug(f"Searching Google Scholar for: {query}")
     search_results = scholarly.search_pubs(query)
     logger.info(f"Found {search_results.total_results} results")
 
@@ -56,11 +57,11 @@ def search_google_scholar(
             output_path, str
         ), "The output path must be provided if you wish to save PDF files."
         # Create the output directory if it does not exist
-        journal_output_dir = os.path.join(
-            output_path, PATHS.PDF_DOWNLOADS_FOLDER, journal_name.replace(" ", "_")
-        )
-        if not os.path.exists(journal_output_dir):
-            os.makedirs(journal_output_dir)
+        output_dir = os.path.join(output_path, PATHS.PDF_DOWNLOADS_FOLDER)
+        if journal_name:
+            output_dir = os.path.join(output_dir, journal_name.replace(" ", "_"))
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
 
     for index, result in enumerate(search_results):
         # related_articles = scholarly.get_related_articles(result)
@@ -72,6 +73,8 @@ def search_google_scholar(
         year = result["bib"]["pub_year"]
         citation = result["num_citations"]
         source = result["bib"]["venue"]
+
+        logger.info(f"Processing result: {title}")
 
         # Format authors for the table format
         author_list = authors.split(", ") if isinstance(authors, str) else authors
@@ -86,10 +89,8 @@ def search_google_scholar(
 
         # Check for a PDF link
         pdf_link = result.get("eprint_url", None)
-        pdf_filename = (
-            f"{journal_output_dir}/{index+1+idx}_{year}_{main_author}.pdf".replace(
-                " ", "_"
-            )
+        pdf_filename = f"{output_dir}/{index+1+idx}_{year}_{main_author}.pdf".replace(
+            " ", "_"
         )
 
         # Attempt to download the PDF if the option is enabled and the PDF link exists
