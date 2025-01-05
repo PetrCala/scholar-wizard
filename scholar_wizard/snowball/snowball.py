@@ -25,7 +25,7 @@ def add_arguments(parser):
     - parser (argparse.ArgumentParser): The parser to add arguments to.
     """
     parser.add_argument(
-        "--output_path",
+        "--output-path",
         type=str,
         required=True,
         help="The path to save the snowballing results.",
@@ -38,19 +38,19 @@ def add_arguments(parser):
         help="List of journals to limit the snowballing process. If omitted, all journals are considered.",
     )
     parser.add_argument(
-        "--use_proxy",
+        "--use-proxy",
         action="store_true",
         default=True,
         help="Flag to use a proxy server (default: True).",
     )
     parser.add_argument(
-        "--no-use_proxy",
+        "--no-use-proxy",
         action="store_false",
         dest="use_proxy",
         help="Do not use a proxy server.",
     )
     parser.add_argument(
-        "--date_format",
+        "--date-format",
         type=str,
         default=STATIC.DATE_FORMAT,
         help=f"The date format to use for the output files (default: {STATIC.DATE_FORMAT}).",

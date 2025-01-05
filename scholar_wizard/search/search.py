@@ -143,7 +143,7 @@ def add_arguments(parser):
         help="The search query string, including keywords and logical operators.",
     )
     parser.add_argument(
-        "--output_path",
+        "--output-path",
         type=str,
         required=True,
         help="The path to save the search results.",
@@ -156,61 +156,61 @@ def add_arguments(parser):
         help="List of journals to limit the search to. If omitted, search the entire database.",
     )
     parser.add_argument(
-        "--save_output_to_df",
+        "--save-output-to-df",
         action="store_true",
         default=True,
         help="Flag to save the search results to a DataFrame (default: True).",
     )
     parser.add_argument(
-        "--no-save_output_to_df",
+        "--no-save-output-to-df",
         action="store_false",
         dest="save_output_to_df",
         help="Do not save the search results to a DataFrame.",
     )
     parser.add_argument(
-        "--save_output_metadata",
+        "--save-output-metadata",
         action="store_true",
         default=True,
         help="Flag to save the metadata of the search results (default: True).",
     )
     parser.add_argument(
-        "--no-save_output_metadata",
+        "--no-save-output-metadata",
         action="store_false",
         dest="save_output_metadata",
         help="Do not save the metadata of the search results.",
     )
     parser.add_argument(
-        "--save_results_to_pdf",
+        "--save-results-to-pdf",
         action="store_true",
         default=True,
         help="Flag to download available PDFs (default: True).",
     )
     parser.add_argument(
-        "--no-save_results_to_pdf",
+        "--no-save-results-to-pdf",
         action="store_false",
         dest="save_results_to_pdf",
         help="Do not download available PDFs.",
     )
     parser.add_argument(
-        "--use_proxy",
+        "--use-proxy",
         action="store_true",
         default=True,
         help="Flag to use a proxy server (default: True).",
     )
     parser.add_argument(
-        "--no-use_proxy",
+        "--no-use-proxy",
         action="store_false",
         dest="use_proxy",
         help="Do not use a proxy server.",
     )
     parser.add_argument(
-        "--max_pdf_downloads",
+        "--max-pdf-downloads",
         type=int,
         default=STATIC.MAX_PDF_DOWNLOADS_DEFAULT,
         help=f"The maximum number of PDF files to download per journal/search (default: {STATIC.MAX_PDF_DOWNLOADS_DEFAULT}).",
     )
     parser.add_argument(
-        "--date_format",
+        "--date-format",
         type=str,
         default=STATIC.DATE_FORMAT,
         help=f"The date format to use for the output files (default: {STATIC.DATE_FORMAT}).",

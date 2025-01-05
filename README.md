@@ -97,14 +97,14 @@ python -m scholar_wizard search [options]
 **Options:**
 
 - `--query` (str, **required**): The search query string, including keywords and logical operators.
-- `--output_path` (str, **required**): The directory path where results will be saved.
+- `--output-path` (str, **required**): The directory path where results will be saved.
 - `--journals` (str, optional): List of journals to limit the search to. Provide multiple journals separated by spaces.
-- `--save_output_to_df` / `--no-save_output_to_df` (bool, optional): Flag to save the search results to a DataFrame. Defaults to `True`.
-- `--save_output_metadata` / `--no-save_output_metadata` (bool, optional): Flag to save the metadata of the search results. Defaults to `True`.
-- `--save_results_to_pdf` / `--no-save_results_to_pdf` (bool, optional): Flag to download available PDFs. Defaults to `True`.
-- `--use_proxy` / `--no-use_proxy` (bool, optional): Flag to use a proxy server. Defaults to `True`.
-- `--max_pdf_downloads` (int, optional): Maximum number of PDF files to download per journal/search. Defaults to `50`.
-- `--date_format` (str, optional): The date format to use for the output files. Defaults to `YYYY-MM-DD`.
+- `--save-output-to-df` / `--no-save-output-to-df` (bool, optional): Flag to save the search results to a DataFrame. Defaults to `True`.
+- `--save-output-metadata` / `--no-save-output-metadata` (bool, optional): Flag to save the metadata of the search results. Defaults to `True`.
+- `--save-results-to-pdf` / `--no-save-results-to-pdf` (bool, optional): Flag to download available PDFs. Defaults to `True`.
+- `--use-proxy` / `--no-use-proxy` (bool, optional): Flag to use a proxy server. Defaults to `True`.
+- `--max-pdf-downloads` (int, optional): Maximum number of PDF files to download per journal/search. Defaults to `50`.
+- `--date-format` (str, optional): The date format to use for the output files. Defaults to `YYYY-MM-DD`.
 
 #### 2. Snowball
 
@@ -119,10 +119,10 @@ python -m scholar_wizard snowball [options]
 
 **Options:**
 
-- `--output_path` (str, **required**): The directory path where snowballing results will be saved.
+- `--output-path` (str, **required**): The directory path where snowballing results will be saved.
 - `--journals` (str, optional): List of journals to limit the snowballing process. Provide multiple journals separated by spaces.
-- `--use_proxy` / `--no-use_proxy` (bool, optional): Flag to use a proxy server. Defaults to `True`.
-- `--date_format` (str, optional): The date format to use for the output files. Defaults to `YYYY-MM-DD`.
+- `--use-proxy` / `--no-use-proxy` (bool, optional): Flag to use a proxy server. Defaults to `True`.
+- `--date-format` (str, optional): The date format to use for the output files. Defaults to `YYYY-MM-DD`.
 
 ## Help and Documentation
 
