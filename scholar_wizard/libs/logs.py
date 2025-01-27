@@ -12,5 +12,5 @@ def clean_log_file(log_file_path: str) -> None:
     if not os.path.exists(log_file_path):
         logger.debug(f"Log file {log_file_path} not found")
         return
-    with open(log_file_path, "w"):
+    with open(log_file_path, "w", encoding="utf-8"):
         pass

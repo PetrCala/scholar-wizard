@@ -1,7 +1,6 @@
 import os
 from loguru import logger
 import pandas as pd
-from scholar_wizard import PATHS, STATIC
 
 
 def save_output(out_df: pd.DataFrame, full_path: str) -> None:
