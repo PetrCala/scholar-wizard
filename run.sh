@@ -5,10 +5,11 @@ source "$PROJECT_DIR_REL/scripts/shellUtils.sh"
 
 PROJECT_ROOT="$(get_abs_path "$PROJECT_DIR_REL")"
 SCRIPTS_DIR="$PROJECT_ROOT/scripts"
+PACKAGE_DIR="scholar_wizard"
 
 function run_lint {
   LINTRC_PATH="$PROJECT_ROOT/.pylintrc"
-  LINT_PATH="$COMMANDER_CORE"
+  LINT_PATH="$PACKAGE_DIR"
   TESTS_PATH="$PROJECT_ROOT/tests"
   pylint --recursive=y --rcfile="$LINTRC_PATH" "$LINT_PATH" "$TESTS_PATH" "$@"
 }
