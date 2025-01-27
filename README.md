@@ -49,21 +49,11 @@ Before using Scholar Wizard, ensure you have the following:
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-   Install the required packages:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Install Scholar Wizard**
-
-   You can install Scholar Wizard in editable mode:
+   Install the pacakge:
 
    ```bash
    pip install -e .
    ```
-
-   This allows you to modify the source code and have changes reflected without reinstalling.
 
 ## Running Scholar Wizard
 
