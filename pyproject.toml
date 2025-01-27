@@ -17,6 +17,7 @@ scholarly = "^1.7.11"
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
 pylint = "^3.3.3"
+coverage = "^7.6.10"
 
 [build-system]
 requires = ["poetry-core"]
