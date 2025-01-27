@@ -74,9 +74,7 @@ def search(
 
     run_key = time.strftime(date_format)
 
-    log_file_path = f"{output_path}/{PATHS.LOG_FILE_NAME}_{run_key}.log"
-
-    if log_file_path:
+    if log_file_path := f"{output_path}/{PATHS.LOG_FILE_NAME}_{run_key}.log":
         logger.debug("Setting up logging to a file")
         clean_log_file(
             log_file_path

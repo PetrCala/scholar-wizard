@@ -21,7 +21,7 @@ def main():
     # Dictionary to hold command names and their corresponding run functions
     commands = {}
 
-    for finder, name, ispkg in pkgutil.iter_modules(package_path):
+    for _, name, ispkg in pkgutil.iter_modules(package_path):
         if ispkg and name in SUBMODULES:
             try:
                 # module = importlib.import_module(f".{name}", package=package.__name__)
@@ -58,7 +58,7 @@ def main():
     if args.command:
         try:
             commands[args.command](args)
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             print(f"Error executing command '{args.command}': {e}", file=sys.stderr)
             sys.exit(1)
     else:

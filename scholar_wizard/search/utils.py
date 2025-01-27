@@ -7,6 +7,7 @@ from scholarly import scholarly
 from scholar_wizard import PATHS, STATIC
 
 
+# pylint: disable=too-many-locals
 def search_google_scholar(
     query: str,
     journal_name: str = None,
@@ -83,7 +84,7 @@ def search_google_scholar(
         # Format authors for the table format
         author_list = authors.split(", ") if isinstance(authors, str) else authors
         main_author = author_list[0]
-        additional_authors = ", ".join(author_list[1:]) if len(author_list) > 1 else ""
+        # additional_authors = ", ".join(author_list[1:]) if len(author_list) > 1 else ""
         formatted_authors = (
             f"{main_author} et al." if len(author_list) > 1 else main_author
         )
@@ -106,7 +107,7 @@ def search_google_scholar(
         ):
             logger.debug(f"Downloading PDF for {title}")
             try:
-                response = requests.get(pdf_link)
+                response = requests.get(pdf_link, timeout=30)
                 if response.status_code == 200:
                     with open(pdf_filename, "wb") as pdf_file:
                         pdf_file.write(response.content)
@@ -114,7 +115,7 @@ def search_google_scholar(
                 else:
                     pdf_link = None  # Invalidate the link if the download failed
                 time.sleep(0.2)
-            except Exception as e:
+            except Exception as e:  # pylint: disable=broad-exception-caught
                 print(f"Failed to download PDF for {title}: {e}")
                 pdf_link = None
 

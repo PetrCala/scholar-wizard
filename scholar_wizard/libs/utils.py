@@ -24,7 +24,7 @@ def save_metadata(out_df: pd.DataFrame, full_path: str, journal_count: int) -> N
 
     unique_journals = out_df["Journal Name"].nunique()
 
-    with open(full_path, "w") as f:
+    with open(full_path, "w", encoding="utf-8") as f:
         f.write(f"Journals searched: {journal_count}\n")
         f.write(f"Total number of studies: {out_df.shape[0]}\n")
         f.write(f"Number of journals with results: {unique_journals}\n")
