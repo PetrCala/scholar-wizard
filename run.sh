@@ -14,11 +14,19 @@ function run_lint {
   pylint --recursive=y --rcfile="$LINTRC_PATH" "$LINT_PATH" "$TESTS_PATH" "$@"
 }
 function print_help {
-  banner "                    Usage                    "
-  echo "Available options: "
-  echo "     lint             - Lint the folder"
-  echo "     merge            - Merge the current branch into a specified one and push these changes to origin"
+  cat <<EOF
+  Usage: $0 <command> [args]
+
+  Available options:
+       lint             - Lint the folder
+       merge            - Merge the current branch into a specified one and push these changes to origin
+EOF
 }
+
+if [ $# -eq 0 ]; then
+  print_help
+  exit 1
+fi
 
 case ${1} in
 lint)
@@ -30,7 +38,8 @@ merge)
   source $SCRIPTS_DIR/mergeAndPush.sh "$@"
   ;;
 *)
-  echo "Got: ${1}"
+  echo "Error: unknown command: $1"
   print_help
+  exit 1
   ;;
 esac
