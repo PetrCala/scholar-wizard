@@ -15,11 +15,13 @@ function run_lint {
 }
 function print_help {
   cat <<EOF
-  Usage: $0 <command> [args]
+Usage: $0 <command> [args]
 
-  Available options:
-       lint             - Lint the folder
-       merge            - Merge the current branch into a specified one and push these changes to origin
+Available options:
+  lint             - Lint the folder
+  merge            - Merge the current branch into a specified one and push these changes to origin
+  test             - Run unit tests
+  test-all         - Run all tests
 EOF
 }
 
@@ -36,6 +38,12 @@ lint)
 merge)
   shift
   source $SCRIPTS_DIR/mergeAndPush.sh "$@"
+  ;;
+test)
+  pytest -q -m "not integration"
+  ;;
+test-all)
+  pytest -q
   ;;
 *)
   echo "Error: unknown command: $1"
