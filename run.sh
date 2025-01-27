@@ -1,3 +1,11 @@
+#!/bin/bash
+
+PROJECT_DIR_REL=$(dirname "${BASH_SOURCE[0]}")
+source "$PROJECT_DIR_REL/scripts/shellUtils.sh"
+
+PROJECT_ROOT="$(get_abs_path "$PROJECT_DIR_REL")"
+SCRIPTS_DIR="$PROJECT_ROOT/scripts"
+
 function run_lint {
   LINTRC_PATH="$PROJECT_ROOT/.pylintrc"
   LINT_PATH="$COMMANDER_CORE"
