@@ -127,7 +127,7 @@ def run(args):
     """
     # Call the snowball function with the parsed arguments
     snowball(
-        output_path=args.output_path,
+        output_dir=args.output_dir,
         use_proxy=args.use_proxy,
         date_format=args.date_format,
     )
