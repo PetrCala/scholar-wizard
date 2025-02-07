@@ -57,6 +57,7 @@ def snowball_a_study(citation: str) -> pd.DataFrame:
         journal = result["bib"]["venue"]
         num_citations = result["num_citations"]
         source = result["bib"]["venue"]
+        pdf_link = result.get("eprint_url", None)
 
         logger.info(f"Processing relevant study: {title}")
 
@@ -80,6 +81,7 @@ def snowball_a_study(citation: str) -> pd.DataFrame:
             title,
             "",
             citation_full,
+            pdf_link,
         ]
 
         results.append(row)
@@ -93,6 +95,7 @@ def snowball_a_study(citation: str) -> pd.DataFrame:
         "Article Title",
         "Additional Data",
         "Full Citation",
+        "PDF Link",
     ]
 
     # Convert the list of results into a DataFrame
