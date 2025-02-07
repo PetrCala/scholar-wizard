@@ -13,7 +13,7 @@ def get_study_publication(citation: str) -> dict | None:
         publication = next(search_results, None)
 
         if publication is None:
-            logger.warning("Iterator is empty.")
+            logger.warning(f"Found no results when searching for citation: {citation}.")
             return None
 
         try:
