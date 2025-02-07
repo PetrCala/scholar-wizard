@@ -55,7 +55,6 @@ def snowball(
 
     snowballing_df = parse_snowballing_results(relevant_studies_df=relevant_studies_df)
 
-    # if save_output_to_df:
     output_df_path = f"{output_path}/{PATHS.SNOWBALL_OUTPUT_FILE}_{run_key}.csv"
     save_output(out_df=snowballing_df, full_path=output_df_path)
 
