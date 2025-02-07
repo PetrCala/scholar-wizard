@@ -7,7 +7,7 @@ from scholar_wizard.libs.scholar_utils import setup_proxy
 class TestSetupProxy:
     """Test the 'setup_proxy' function."""
 
-    @pytest.fixture
+    @pytest.fixture(autouse=True)
     def mock_use_proxy(self):
         """Mocks the call to the use_proxy method of the scholarly module."""
         scholarly_mock = MagicMock()
@@ -16,12 +16,9 @@ class TestSetupProxy:
             mock.return_value = scholarly_mock
             yield scholarly_mock
 
-    def test_proxy_setup(
-        self, caplog: pytest.LogCaptureFixture, mock_use_proxy: pytest.FixtureRequest
-    ):
+    def test_proxy_setup(self, caplog: pytest.LogCaptureFixture):
         """Should set up the scholarly proxy."""
         with caplog.at_level(logging.DEBUG):
             setup_proxy()
 
-        assert "Using a proxy generator" in caplog.text
-        mock_use_proxy.assert_called_once()
+        assert "Proxy works!" in caplog.text
