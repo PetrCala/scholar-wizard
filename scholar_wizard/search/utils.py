@@ -1,6 +1,4 @@
 import os
-import time
-import requests
 from loguru import logger
 import pandas as pd
 from scholarly import scholarly

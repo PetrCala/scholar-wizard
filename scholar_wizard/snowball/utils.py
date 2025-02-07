@@ -1,6 +1,8 @@
+import os
 import pandas as pd
 from loguru import logger
 from scholarly import scholarly
+from scholar_wizard.libs.utils import save_pdf_file
 
 
 def get_study_publication(citation: str) -> dict | None:
@@ -104,3 +106,69 @@ def snowball_a_study(citation: str) -> pd.DataFrame:
     df = pd.DataFrame(results, columns=columns)
 
     return df
+
+
+def parse_snowballing_results(relevant_studies_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Parse a raw snowballing DataFrame to extract relevant information.
+
+    This function calculates the frequency of citations for each unique study,
+    removes the 'Index' and 'Source Study' columns, and orders the result
+    first by frequency (descending) and then by citation count (descending).
+    """
+    # Count the frequency of each unique study based on 'Formatted Author(s) and Year'
+    frequency_counts = (
+        relevant_studies_df.groupby("Formatted Author(s) and Year")["Source Study"]
+        .count()
+        .reset_index()
+    )
+    frequency_counts.rename(columns={"Source Study": "Frequency"}, inplace=True)
+
+    # Merge the frequency counts with the original dataframe, dropping duplicates
+    merged_df = relevant_studies_df.drop(
+        columns=["Index", "Source Study"]
+    ).drop_duplicates()
+    result_df = merged_df.merge(frequency_counts, on="Formatted Author(s) and Year")
+
+    # Sort first by Frequency (descending) then by Citation Count (descending)
+    result_df = result_df.sort_values(
+        by=["Frequency", "Citation Count"], ascending=[False, False]
+    )
+
+    # Reset index for clean output
+    result_df.reset_index(drop=True, inplace=True)
+
+    return result_df
+
+
+def download_snowballing_pdfs(
+    parsed_df: pd.DataFrame, output_dir: str, max_pdfs: int = 100
+) -> None:
+    """Using a snowballing output DataFrame, download all studies into an output folder."""
+
+    assert isinstance(
+        parsed_df, pd.DataFrame
+    ), "The snowballing DataFrame must be a DataFrame."
+    assert isinstance(output_dir, str), "The output directory must be a string."
+
+    assert (
+        "Frequency" in parsed_df.columns
+    ), "The DataFrame must contain a 'Frequency' column."
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    pdfs_to_download = parsed_df[parsed_df["Frequency"] > 1].head(max_pdfs)
+
+    logger.info(
+        f"Downloading {pdfs_to_download.shape[0]} snowballing PDFs to: {output_dir}"
+    )
+
+    for idx, row in pdfs_to_download.iterrows():
+        pdf_url = row["PDF URL"]
+        pdf_title = f"{idx}_{row["Formatted Author(s) and Year"]}"
+        pdf_path = os.path.join(output_dir, f"{pdf_title}.pdf")
+
+        try:
+            save_pdf_file(pdf_url, pdf_path)
+        except Exception as e:
+            logger.error(f"Failed to download PDF from {pdf_url}: {e}")

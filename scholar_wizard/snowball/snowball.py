@@ -6,19 +6,20 @@ from scholar_wizard import STATIC, PATHS
 from scholar_wizard.libs.file_handling import save_output
 from scholar_wizard.libs.scholar_utils import setup_proxy
 from scholar_wizard.libs.logs import clean_log_file
-from .utils import snowball_a_study
+from .utils import (
+    snowball_a_study,
+    parse_snowballing_results,
+    download_snowballing_pdfs,
+)
 
 
 def snowball(
     output_path: str,
-    journals: list[str] = None,
     use_proxy: bool = True,
     date_format: str = STATIC.DATE_FORMAT,
+    download_pdfs: bool = True,
 ):
     assert isinstance(output_path, str), "The output path must be a string."
-    assert isinstance(
-        journals, (list, type(None))
-    ), "The journals must be a list of strings or None."
     assert isinstance(use_proxy, bool), "The use_proxy flag must be a boolean."
     assert isinstance(date_format, str), "The date_format must be a string."
 
@@ -38,7 +39,7 @@ def snowball(
     if use_proxy:
         setup_proxy()
 
-    merged_results = pd.DataFrame()
+    relevant_studies_df = pd.DataFrame()
 
     src_citations = [
         "Gneezy, U., Rau, H., Samek, A., & Zhurakhovska, L. (2017). Do I care if you are paid? A field experiment on charitable donations (No. 307). cege Discussion Papers."
@@ -48,15 +49,27 @@ def snowball(
         logger.info(f"Processing study {i + 1}/{len(src_citations)}: {citation}")
         df = snowball_a_study(citation)
         if not df.empty:
-            merged_results = pd.concat([merged_results, df], ignore_index=True)
+            relevant_studies_df = pd.concat(
+                [relevant_studies_df, df], ignore_index=True
+            )
+
+    snowballing_df = parse_snowballing_results(relevant_studies_df=relevant_studies_df)
 
     # if save_output_to_df:
     output_df_path = f"{output_path}/{PATHS.SNOWBALL_OUTPUT_FILE}_{run_key}.csv"
-    save_output(out_df=merged_results, full_path=output_df_path)
+    save_output(out_df=snowballing_df, full_path=output_df_path)
+
+    if download_pdfs:
+        download_snowballing_pdfs(
+            parsed_df=snowballing_df,
+            output_dir=f"{output_path}/{PATHS.PDF_DOWNLOADS_FOLDER}_{run_key}",
+        )
+    else:
+        logger.info("Skipping PDF downloads")
 
     logger.success("Snowballing completed")
 
-    return merged_results
+    return snowballing_df
 
 
 def add_arguments(parser):
@@ -73,13 +86,6 @@ def add_arguments(parser):
         help="The path to save the snowballing results.",
     )
     parser.add_argument(
-        "--journals",
-        type=str,
-        nargs="*",
-        default=None,
-        help="List of journals to limit the snowballing process. If omitted, all journals are considered.",
-    )
-    parser.add_argument(
         "--no-proxy",
         action="store_false",
         dest="use_proxy",
@@ -92,6 +98,12 @@ def add_arguments(parser):
         default=STATIC.DATE_FORMAT,
         help=f"The date format to use for the output files (default: {STATIC.DATE_FORMAT}).",
     )
+    parser.add_argument(
+        "--download-pdfs",
+        action="store_true",
+        default=True,
+        help="Flag to download PDFs for the snowballing results (default: True).",
+    )
 
 
 def run(args):
@@ -101,13 +113,9 @@ def run(args):
     Args:
     - args (argparse.Namespace): Parsed command-line arguments.
     """
-    # Convert journals to list if it's not None
-    journals = args.journals if args.journals else None
-
     # Call the snowball function with the parsed arguments
     snowball(
         output_path=args.output_path,
-        journals=journals,
         use_proxy=args.use_proxy,
         date_format=args.date_format,
     )
