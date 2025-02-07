@@ -14,22 +14,23 @@ from .utils import (
 
 
 def snowball(
-    output_path: str,
+    output_dir: str,
     use_proxy: bool = True,
     date_format: str = STATIC.DATE_FORMAT,
+    save_unparsed_output: bool = True,
     download_pdfs: bool = True,
 ):
-    assert isinstance(output_path, str), "The output path must be a string."
+    assert isinstance(output_dir, str), "The output directory must be a string."
     assert isinstance(use_proxy, bool), "The use_proxy flag must be a boolean."
     assert isinstance(date_format, str), "The date_format must be a string."
 
     logger.info("Running snowballing...")
 
-    os.makedirs(output_path, exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)
 
     run_key = time.strftime(date_format)
 
-    if log_file_path := f"{output_path}/{PATHS.LOG_FILE_NAME}_{run_key}.log":
+    if log_file_path := f"{output_dir}/{PATHS.LOG_FILE_NAME}_{run_key}.log":
         logger.debug("Setting up logging to a file")
         clean_log_file(
             log_file_path
@@ -53,15 +54,21 @@ def snowball(
                 [relevant_studies_df, df], ignore_index=True
             )
 
+    if save_unparsed_output:
+        unparsed_output_path = (
+            f"{output_dir}/{PATHS.SNOWBALL_UNPARSED_OUTPUT_FILE}_{run_key}.csv"
+        )
+        save_output(out_df=relevant_studies_df, full_path=unparsed_output_path)
+
     snowballing_df = parse_snowballing_results(relevant_studies_df=relevant_studies_df)
 
-    output_df_path = f"{output_path}/{PATHS.SNOWBALL_OUTPUT_FILE}_{run_key}.csv"
+    output_df_path = f"{output_dir}/{PATHS.SNOWBALL_OUTPUT_FILE}_{run_key}.csv"
     save_output(out_df=snowballing_df, full_path=output_df_path)
 
     if download_pdfs:
         download_snowballing_pdfs(
             parsed_df=snowballing_df,
-            output_dir=f"{output_path}/{PATHS.PDF_DOWNLOADS_FOLDER}_{run_key}",
+            output_dir=f"{output_dir}/{PATHS.PDF_DOWNLOADS_FOLDER}_{run_key}",
         )
     else:
         logger.info("Skipping PDF downloads")
@@ -79,10 +86,10 @@ def add_arguments(parser):
     - parser (argparse.ArgumentParser): The parser to add arguments to.
     """
     parser.add_argument(
-        "--output-path",
+        "--output-dir",
         type=str,
         required=True,
-        help="The path to save the snowballing results.",
+        help="The path to the directory where to save the snowballing results.",
     )
     parser.add_argument(
         "--no-proxy",
@@ -96,6 +103,12 @@ def add_arguments(parser):
         type=str,
         default=STATIC.DATE_FORMAT,
         help=f"The date format to use for the output files (default: {STATIC.DATE_FORMAT}).",
+    )
+    parser.add_argument(
+        "--save-unparsed-output",
+        action="store_true",
+        default=True,
+        help="Flag to save the unparsed snowballing results (default: True).",
     )
     parser.add_argument(
         "--download-pdfs",

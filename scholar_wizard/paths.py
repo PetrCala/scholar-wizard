@@ -7,6 +7,7 @@ class PATHS(StrEnum):
     PDF_DOWNLOADS_FOLDER = "pdf_downloads"
     SEARCH_OUTPUT_FILE = "search"
     SNOWBALL_OUTPUT_FILE = "snowball"
+    SNOWBALL_UNPARSED_OUTPUT_FILE = "snowball_unparsed"
     METADATA_FILE = "metadata"
     LOG_FILE_NAME = "literature_search"
 
