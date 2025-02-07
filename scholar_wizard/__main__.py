@@ -2,6 +2,7 @@ import argparse
 import importlib
 import pkgutil
 import sys
+from scholarly import scholarly
 
 # List of executable submodules
 SUBMODULES = ["search", "snowball"]
@@ -66,4 +67,9 @@ def main():
 
 
 if __name__ == "__main__":
+    # First, get the IDs of all studies to snowball from
+    # it = scholarly.search_citedby(publication_id="ppDRMZVtKi8J")
+    # for index, result in enumerate(it):
+    #     # Here, possibly extract all the studies either by citations, ID, or any other comparable metric; then, extract those that have the most citations
+    #     breakpoint()
     main()

@@ -18,6 +18,7 @@ def search(
     save_output_metadata: bool = True,
     save_results_to_pdf: bool = True,
     use_proxy: bool = True,
+    working_papers_only: bool = False,
     max_pdf_downloads: int = STATIC.MAX_PDF_DOWNLOADS_DEFAULT,
     date_format: str = STATIC.DATE_FORMAT,
 ) -> pd.DataFrame:
@@ -32,6 +33,7 @@ def search(
     - save_output_metadata (bool, optional): Whether to save the metadata of the search results (default: True).
     - save_results_to_pdf (bool, optional): Whether to download available PDFs (default: True).
     - use_proxy (bool, optional): Whether to use a proxy server (default: True).
+    - working_papers_only (bool, optional): Whether to search only working papers (default: False).
     - max_pdf_downloads (int, optional): The maximum number of PDF files to download per journal/search (default: 50).
     - date_format (str, optional): The date format to use for the output files.
 
@@ -62,9 +64,16 @@ def search(
     ), "The save_results_to_pdf flag must be a boolean."
     assert isinstance(use_proxy, bool), "The use_proxy flag must be a boolean."
     assert isinstance(
+        working_papers_only, bool
+    ), "The working_papers_only flag must be a boolean."
+    assert isinstance(
         max_pdf_downloads, int
     ), "The max_pdf_downloads must be an integer."
     assert isinstance(date_format, str), "The date_format must be a string."
+
+    if working_papers_only:
+        logger.info("Modifying the search query to include only working papers")
+        query = f'intitle:"working paper" {query}'
 
     logger.info("Running literature search")
     logger.info(f"Using the following search query: '{query}'")
@@ -198,6 +207,12 @@ def add_arguments(parser):
         help="Flag to use a proxy server (default: True).",
     )
     parser.add_argument(
+        "--working-papers-only",
+        action="store_true",
+        default=False,
+        help="Flag to search only working papers (default: False).",
+    )
+    parser.add_argument(
         "--max-pdf-downloads",
         type=int,
         default=STATIC.MAX_PDF_DOWNLOADS_DEFAULT,
@@ -230,6 +245,7 @@ def run(args):
         save_output_metadata=args.save_output_metadata,
         save_results_to_pdf=args.save_results_to_pdf,
         use_proxy=args.use_proxy,
+        working_papers_only=args.working_papers_only,
         max_pdf_downloads=args.max_pdf_downloads,
         date_format=args.date_format,
     )
