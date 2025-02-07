@@ -78,8 +78,7 @@ def search(
     logger.info("Running literature search")
     logger.info(f"Using the following search query: '{query}'")
 
-    if not os.path.exists(output_path):
-        os.makedirs(output_path)
+    os.makedirs(output_path, exist_ok=True)
 
     run_key = time.strftime(date_format)
 
@@ -129,7 +128,7 @@ def search(
         merged_results = do_search(journal_name=None, idx=0)  # Search all sources
 
     if save_output_to_df:
-        output_df_path = f"{output_path}/{PATHS.SERACH_OUTPUT_FILE}_{run_key}.csv"
+        output_df_path = f"{output_path}/{PATHS.SEARCH_OUTPUT_FILE}_{run_key}.csv"
         save_output(out_df=merged_results, full_path=output_df_path)
 
     logger.success("Literature search completed")

@@ -1,4 +1,12 @@
-from scholar_wizard import STATIC
+import os
+import time
+from loguru import logger
+import pandas as pd
+from scholar_wizard import STATIC, PATHS
+from scholar_wizard.libs.file_handling import save_output
+from scholar_wizard.libs.scholar_utils import setup_proxy
+from scholar_wizard.libs.logs import clean_log_file
+from .utils import snowball_a_study
 
 
 def snowball(
@@ -14,7 +22,41 @@ def snowball(
     assert isinstance(use_proxy, bool), "The use_proxy flag must be a boolean."
     assert isinstance(date_format, str), "The date_format must be a string."
 
-    print("Snowballing not implemented yet")
+    logger.info("Running snowballing...")
+
+    os.makedirs(output_path, exist_ok=True)
+
+    run_key = time.strftime(date_format)
+
+    if log_file_path := f"{output_path}/{PATHS.LOG_FILE_NAME}_{run_key}.log":
+        logger.debug("Setting up logging to a file")
+        clean_log_file(
+            log_file_path
+        )  # Clear the literature search log file upon each script execution
+        logger.add(log_file_path, rotation="10 MB", backtrace=True, diagnose=True)
+
+    if use_proxy:
+        setup_proxy()
+
+    merged_results = pd.DataFrame()
+
+    src_citations = [
+        "Gneezy, U., Rau, H., Samek, A., & Zhurakhovska, L. (2017). Do I care if you are paid? A field experiment on charitable donations (No. 307). cege Discussion Papers."
+    ]
+
+    for i, citation in enumerate(src_citations):
+        logger.info(f"Processing study {i + 1}/{len(src_citations)}: {citation}")
+        df = snowball_a_study(citation)
+        if not df.empty:
+            merged_results = pd.concat([merged_results, df], ignore_index=True)
+
+    # if save_output_to_df:
+    output_df_path = f"{output_path}/{PATHS.SNOWBALL_OUTPUT_FILE}_{run_key}.csv"
+    save_output(out_df=merged_results, full_path=output_df_path)
+
+    logger.success("Snowballing completed")
+
+    return merged_results
 
 
 def add_arguments(parser):
