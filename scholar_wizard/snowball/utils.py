@@ -37,15 +37,17 @@ def get_study_publication(citation: str) -> dict | None:
 def snowball_a_study(citation: str) -> pd.DataFrame:
     """Using a study citation, get it's data, find relevant studies, and extract their data into a pandas data frame."""
 
-    publication = get_study_publication(citation)
-    # OR
-    # publication = scholarly.search_single_pub(pub_title=citation, filled=True)
+    # publication = get_study_publication(citation)
 
-    if not publication:
-        return pd.DataFrame({})
+    # if not publication:
+    #     return pd.DataFrame({})
 
-    url_related_articles = publication["bib"]["url_related_articles"]
-    related_studies = scholarly.search_pubs_custom_url(url=url_related_articles)
+    # url_related_articles = publication["bib"]["url_related_articles"]
+    # related_studies = scholarly.search_pubs_custom_url(url=url_related_articles)
+
+    # OR use scholarly - perhaps wrap this in a try-except block and return an empty DataFrame if it fails
+    publication = scholarly.search_single_pub(pub_title=citation, filled=True)
+    related_studies = scholarly.get_related_articles(publication)
 
     results = []
 
