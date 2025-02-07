@@ -1,5 +1,7 @@
 import os
+import time
 from loguru import logger
+import requests
 import pandas as pd
 
 
@@ -31,3 +33,36 @@ def save_metadata(out_df: pd.DataFrame, full_path: str, journal_count: int) -> N
         f.write(
             f"Number of journals with no results: {journal_count - unique_journals}\n"
         )
+
+
+def save_pdf_file(pdf_url: str, save_path: str, timeout: float = 0.2) -> None:
+    """
+    Save a PDF file to the specified output directory.
+
+    Args:
+    - pdf_url (str): The URL of the PDF file to download.
+    - save_path (str): The full path to where the PDF file should be saved.
+
+    Returns:
+    - None
+    """
+    assert isinstance(pdf_url, str), "The PDF URL must be a string."
+    assert isinstance(save_path, str), "The save path must be a string."
+
+    logger.debug(f"Downloading PDF file from: {pdf_url}")
+
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+
+    time.sleep(timeout)
+
+    response = requests.get(pdf_url)
+
+    if response.status_code != 200:
+        raise Exception(f"Invalid response code: {response.status_code}.")
+
+    with open(save_path, "wb") as f:
+        f.write(response.content)
+
+    logger.info(f"PDF file saved to: {save_path}")
+
+    return None

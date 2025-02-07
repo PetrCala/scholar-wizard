@@ -5,6 +5,7 @@ from loguru import logger
 import pandas as pd
 from scholarly import scholarly
 from scholar_wizard import PATHS, STATIC
+from scholar_wizard.libs.utils import save_pdf_file
 
 
 # pylint: disable=too-many-locals
@@ -111,19 +112,11 @@ def search_google_scholar(
             and pdf_count < max_pdf_downloads
             and not os.path.exists(pdf_filename)
         ):
-            logger.debug(f"Downloading PDF for {title}")
             try:
-                response = requests.get(pdf_link, timeout=30)
-                if response.status_code == 200:
-                    with open(pdf_filename, "wb") as pdf_file:
-                        pdf_file.write(response.content)
-                    pdf_count += 1
-                else:
-                    pdf_link = None  # Invalidate the link if the download failed
-                time.sleep(0.2)
-            except Exception as e:  # pylint: disable=broad-exception-caught
-                print(f"Failed to download PDF for {title}: {e}")
-                pdf_link = None
+                save_pdf_file(pdf_url=pdf_link, save_path=pdf_filename)
+                pdf_count += 1
+            except Exception as e:
+                logger.error(f"Failed to download PDF from {pdf_link}: {e}")
 
         # Prepare the formatted row
         row = [
