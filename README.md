@@ -98,6 +98,9 @@ python -m scholar_wizard search [options]
 **Description:**  
 Perform a snowballing process to find related articles based on existing references.
 
+**Details:**
+For each passed input reference, the package searches for related Google Scholar articles. It saves metadata about each of the related articles, and finally groups these metadata to identify the most relevant articles.
+
 **Usage:**
 
 ```bash

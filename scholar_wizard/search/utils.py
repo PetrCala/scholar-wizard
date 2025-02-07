@@ -81,6 +81,12 @@ def search_google_scholar(
 
         logger.info(f"Processing result: {title}")
 
+        # cite = result["bib"]["url_scholarbib"]
+        # scholar_citation = requests.get(
+        #     "https://scholar.google.com" + cite, timeout=10
+        # ).text
+        # fetch_publication_citation()
+
         # Format authors for the table format
         author_list = authors.split(", ") if isinstance(authors, str) else authors
         main_author = author_list[0]
