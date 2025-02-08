@@ -152,7 +152,11 @@ def run(args):
     """
     # Call the snowball function with the parsed arguments
     snowball(
+        citations=args.citations,
         output_dir=args.output_dir,
         use_proxy=args.use_proxy,
         date_format=args.date_format,
+        max_results=args.max_results,
+        save_unparsed_output=args.save_unparsed_output,
+        download_pdfs=args.download_pdfs,
     )
