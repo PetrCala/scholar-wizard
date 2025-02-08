@@ -14,6 +14,7 @@ from .utils import (
 
 
 def snowball(
+    citations: list[str],
     output_dir: str,
     use_proxy: bool = True,
     date_format: str = STATIC.DATE_FORMAT,
@@ -21,6 +22,9 @@ def snowball(
     save_unparsed_output: bool = True,
     download_pdfs: bool = True,
 ):
+    assert isinstance(
+        citations, list
+    ), "Citations must be provided as a list of strings."
     assert isinstance(output_dir, str), "The output directory must be a string."
     assert isinstance(use_proxy, bool), "The use_proxy flag must be a boolean."
     assert isinstance(date_format, str), "The date_format must be a string."
@@ -43,12 +47,12 @@ def snowball(
 
     relevant_studies_df = pd.DataFrame()
 
-    src_citations = [
-        "Gneezy, U., Rau, H., Samek, A., & Zhurakhovska, L. (2017). Do I care if you are paid? A field experiment on charitable donations (No. 307). cege Discussion Papers."
-    ]
+    if len(citations) == 0:
+        logger.warning("No citations provided for snowballing.")
+        return relevant_studies_df
 
-    for i, citation in enumerate(src_citations):
-        logger.info(f"Processing study {i + 1}/{len(src_citations)}: {citation}")
+    for i, citation in enumerate(citations):
+        logger.info(f"Processing study {i + 1}/{len(citations)}: {citation}")
         df = snowball_a_study(citation, max_results=max_results)
         if not df.empty:
             relevant_studies_df = pd.concat(
@@ -86,6 +90,12 @@ def add_arguments(parser):
     Args:
     - parser (argparse.ArgumentParser): The parser to add arguments to.
     """
+    parser.add_argument(
+        "--citations",
+        nargs="+",
+        required=True,
+        help="List of citations to snowball. Each citation should be a string.",
+    )
     parser.add_argument(
         "--output-dir",
         type=str,
