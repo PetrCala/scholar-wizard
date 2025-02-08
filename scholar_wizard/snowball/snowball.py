@@ -17,6 +17,7 @@ def snowball(
     output_dir: str,
     use_proxy: bool = True,
     date_format: str = STATIC.DATE_FORMAT,
+    max_results: int = 20,
     save_unparsed_output: bool = True,
     download_pdfs: bool = True,
 ):
@@ -48,7 +49,7 @@ def snowball(
 
     for i, citation in enumerate(src_citations):
         logger.info(f"Processing study {i + 1}/{len(src_citations)}: {citation}")
-        df = snowball_a_study(citation)
+        df = snowball_a_study(citation, max_results=max_results)
         if not df.empty:
             relevant_studies_df = pd.concat(
                 [relevant_studies_df, df], ignore_index=True
@@ -103,6 +104,12 @@ def add_arguments(parser):
         type=str,
         default=STATIC.DATE_FORMAT,
         help=f"The date format to use for the output files (default: {STATIC.DATE_FORMAT}).",
+    )
+    parser.add_argument(
+        "--max-results",
+        type=int,
+        default=20,
+        help="The maximum number of relevant studies to retrieve for each snowballed study (default: 20).",
     )
     parser.add_argument(
         "--save-unparsed-output",
