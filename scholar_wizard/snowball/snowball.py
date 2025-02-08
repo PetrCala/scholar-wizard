@@ -53,11 +53,19 @@ def snowball(
 
     for i, citation in enumerate(citations):
         logger.info(f"Processing study {i + 1}/{len(citations)}: {citation}")
-        df = snowball_a_study(citation, max_results=max_results)
-        if not df.empty:
-            relevant_studies_df = pd.concat(
-                [relevant_studies_df, df], ignore_index=True
-            )
+        try:
+            df = snowball_a_study(citation, max_results=max_results)
+            if not df.empty:
+                relevant_studies_df = pd.concat(
+                    [relevant_studies_df, df], ignore_index=True
+                )
+        except Exception as e:
+            logger.error(f"Error processing study {i + 1}: {e}")
+            continue
+
+    if relevant_studies_df.empty:
+        logger.warning("No relevant studies found.")
+        return relevant_studies_df
 
     if save_unparsed_output:
         unparsed_output_path = (
