@@ -1,4 +1,5 @@
 import os
+import itertools
 import pandas as pd
 from loguru import logger
 from scholarly import scholarly
@@ -36,7 +37,7 @@ def get_study_publication(citation: str) -> dict | None:
         return None
 
 
-def snowball_a_study(citation: str) -> pd.DataFrame:
+def snowball_a_study(citation: str, max_results: int = 20) -> pd.DataFrame:
     """Using a study citation, get it's data, find relevant studies, and extract their data into a pandas data frame."""
 
     # publication = get_study_publication(citation)
@@ -53,7 +54,7 @@ def snowball_a_study(citation: str) -> pd.DataFrame:
 
     results = []
 
-    for index, result in enumerate(related_studies):
+    for index, result in itertools.islice(enumerate(related_studies), max_results):
 
         title = result["bib"]["title"]
         authors = result["bib"]["author"]
