@@ -41,15 +41,15 @@ def get_study_publication(citation: str) -> dict | None:
 def snowball_a_study(citation: str, max_results: int = 20) -> pd.DataFrame:
     """Using a study citation, get it's data, find relevant studies, and extract their data into a pandas data frame."""
 
-    time.sleep(0.2)
+    time.sleep(0.4)
     publication = scholarly.search_single_pub(pub_title=citation, filled=True)
-    time.sleep(0.2)  # To avoid rate limiting
+    time.sleep(0.4)  # To avoid rate limiting
     related_studies = scholarly.get_related_articles(publication)
 
     results = []
 
     for index, result in itertools.islice(enumerate(related_studies), max_results):
-        time.sleep(0.2)
+        time.sleep(0.4)
 
         title = result["bib"]["title"]
         authors = result["bib"]["author"]
