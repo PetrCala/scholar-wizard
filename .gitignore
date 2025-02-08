@@ -1,6 +1,7 @@
 # Local files
 artifacts/*
 output/*
+local/*
 resources/*
 **/*.pdf
 **/*.DS_Store
