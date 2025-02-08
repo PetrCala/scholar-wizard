@@ -1,4 +1,5 @@
 import os
+import time
 import itertools
 import pandas as pd
 from loguru import logger
@@ -50,6 +51,7 @@ def snowball_a_study(citation: str, max_results: int = 20) -> pd.DataFrame:
 
     # OR use scholarly - perhaps wrap this in a try-except block and return an empty DataFrame if it fails
     publication = scholarly.search_single_pub(pub_title=citation, filled=True)
+    time.sleep(0.5)  # To avoid rate limiting
     related_studies = scholarly.get_related_articles(publication)
 
     results = []
