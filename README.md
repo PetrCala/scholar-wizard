@@ -85,6 +85,8 @@ python -m scholar_wizard search [options]
 - `--query` (str, **required**): The search query string, including keywords and logical operators.
 - `--output-path` (str, **required**): The directory path where results will be saved.
 - `--journals` (str, optional): List of journals to limit the search to. Provide multiple journals separated by spaces.
+- `--year-from` (int, optional): The starting year to search from.
+- `--year-to` (int, optional): The ending year to search to.
 - `--save-output-to-df` / `--no-save-output-to-df` (bool, optional): Flag to save the search results to a DataFrame. Defaults to `True`.
 - `--save-output-metadata` / `--no-save-output-metadata` (bool, optional): Flag to save the metadata of the search results. Defaults to `True`.
 - `--save-results-to-pdf` / `--no-save-results-to-pdf` (bool, optional): Flag to download available PDFs. Defaults to `True`.

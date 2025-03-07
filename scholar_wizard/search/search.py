@@ -14,6 +14,8 @@ def search(
     query: str,
     output_path: str,
     journals: list[str] = None,
+    year_from: int = None,
+    year_to: int = None,
     save_output_to_df: bool = True,
     save_output_metadata: bool = True,
     save_results_to_pdf: bool = True,
@@ -29,6 +31,8 @@ def search(
     - query (str): The search query string, usually including keywords and logical operators.
     - output_path (str): The path to save the results to.
     - journals (list[str]): If provided, for each journal in the list, the search will be performed for that journal only. If not provided, the search will be performed on the whole database (default: None).
+    - year_from (int, optional): The starting year to search from.
+    - year_to (int, optional): The ending year to search to.
     - save_output_to_df (bool, optional): Whether to save the search results to a DataFrame (default: True).
     - save_output_metadata (bool, optional): Whether to save the metadata of the search results (default: True).
     - save_results_to_pdf (bool, optional): Whether to download available PDFs (default: True).
@@ -54,6 +58,12 @@ def search(
         journals, (list, type(None))
     ), "The journals must be a list of strings or None."
     assert isinstance(
+        year_from, (int, type(None))
+    ), "The year_from must be an integer or None."
+    assert isinstance(
+        year_to, (int, type(None))
+    ), "The year_to must be an integer or None."
+    assert isinstance(
         save_output_to_df, bool
     ), "The save_output_to_df flag must be a boolean."
     assert isinstance(
@@ -73,7 +83,7 @@ def search(
 
     if working_papers_only:
         logger.info("Modifying the search query to include only working papers")
-        query = f'intitle:"working paper" {query}'
+        query = f"{STATIC.WP_QUERY_PREFIX} {query}"
 
     logger.info("Running literature search")
     logger.info(f"Using the following search query: '{query}'")
@@ -98,9 +108,12 @@ def search(
             journal_name=journal_name,
             query=query,
             idx=idx,
+            year_from=year_from,
+            year_to=year_to,
             save_results_to_pdf=save_results_to_pdf,
             output_path=output_path,
             max_pdf_downloads=max_pdf_downloads,
+            working_papers_only=working_papers_only,
         )
 
     logger.info("Starting literature search")
@@ -161,6 +174,20 @@ def add_arguments(parser):
         nargs="*",
         default=None,
         help="List of journals to limit the search to. If omitted, search the entire database.",
+    )
+    parser.add_argument(
+        "--year-from",
+        type=int,
+        dest="year_from",
+        default=None,
+        help="The starting year to search from.",
+    )
+    parser.add_argument(
+        "--year-to",
+        type=int,
+        dest="year_to",
+        default=None,
+        help="The ending year to search to.",
     )
     parser.add_argument(
         "--save-output-to-df",
@@ -240,6 +267,8 @@ def run(args):
         query=args.query,
         output_path=args.output_path,
         journals=journals,
+        year_from=args.year_from,
+        year_to=args.year_to,
         save_output_to_df=args.save_output_to_df,
         save_output_metadata=args.save_output_metadata,
         save_results_to_pdf=args.save_results_to_pdf,

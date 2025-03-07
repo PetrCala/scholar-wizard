@@ -4,6 +4,7 @@ import pandas as pd
 from scholarly import scholarly
 from scholar_wizard import PATHS, STATIC
 from scholar_wizard.libs.utils import save_pdf_file
+from scholar_wizard.libs.wp import subset_search_results_to_wps
 
 
 # pylint: disable=too-many-locals
@@ -11,20 +12,26 @@ def search_google_scholar(
     query: str,
     journal_name: str = None,
     idx: int = 0,
+    year_from: int = None,
+    year_to: int = None,
     save_results_to_pdf: bool = False,
     output_path: str = None,
     max_pdf_downloads: int = STATIC.MAX_PDF_DOWNLOADS_DEFAULT,
+    working_papers_only: bool = False,
 ) -> pd.DataFrame:
     """
     Searches Google Scholar for articles from a specified journal matching the provided query.
 
     Args:
-        query (str): The search query string, usually including keywords and logical operators.
-        journal_name (str, optional): The name of the journal to search within. If not provided, search all sources.
-        idx (int, optional): The index of the first search result to return.
-        save_results_to_pdf (bool, optional): Whether to download available PDFs (default: False).
-        output_path (str, optional): Directory where PDFs should be saved (default: None).
-        max_pdf_downloads (int, optional): The maximum number of PDF files to download per journal/search (default: 50).
+    - query (str): The search query string, usually including keywords and logical operators.
+    - journal_name (str, optional): The name of the journal to search within. If not provided, search all sources.
+    - idx (int, optional): The index of the first search result to return.
+    - year_from (int, optional): The starting year for the search (default: None).
+    - year_to (int, optional): The ending year for the search (default: None).
+    - save_results_to_pdf (bool, optional): Whether to download available PDFs (default: False).
+    - output_path (str, optional): Directory where PDFs should be saved (default: None).
+    - max_pdf_downloads (int, optional): The maximum number of PDF files to download per journal/search (default: 50).
+    - working_papers_only (bool, optional): Whether to only search for working papers (default: False).
 
 
     Returns:
@@ -46,8 +53,16 @@ def search_google_scholar(
 
     # Search Google Scholar
     logger.debug(f"Searching Google Scholar for: {query}")
-    search_results = scholarly.search_pubs(query)
+    search_results = scholarly.search_pubs(query, year_low=year_from, year_high=year_to)
     logger.info(f"Found {search_results.total_results} results")
+    breakpoint()
+
+    if working_papers_only:
+        logger.debug("Subsetting the results to working papers only.")
+        search_results = subset_search_results_to_wps(
+            search_results=search_results, max_results=1000
+        )
+        logger.info(f"Found {len(search_results)} working papers")
 
     results = []
     pdf_count = 0
@@ -64,9 +79,6 @@ def search_google_scholar(
             os.makedirs(output_dir)
 
     for index, result in enumerate(search_results):
-        # related_articles = scholarly.get_related_articles(result)
-        # for related in related_articles:
-        #     pass
         # Extract the necessary details
         title = result["bib"]["title"]
         authors = result["bib"]["author"]

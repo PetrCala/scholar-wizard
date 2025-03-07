@@ -16,3 +16,8 @@ class STATIC(TypedDict):
         "Additional Data",
         "Full Citation",
     ]
+    DOI_API_URL = "https://doi.org/api/handles/{doi}?type=URL"
+    VALID_DOI = "10.47366/sabia.v5n1a3"
+
+    # A prefix that subsets a search query to only include working papers (partially)
+    WP_QUERY_PREFIX = '("working paper" OR "discussion paper") AND'
