@@ -55,7 +55,6 @@ def search_google_scholar(
     logger.debug(f"Searching Google Scholar for: {query}")
     search_results = scholarly.search_pubs(query, year_low=year_from, year_high=year_to)
     logger.info(f"Found {search_results.total_results} results")
-    breakpoint()
 
     if working_papers_only:
         logger.debug("Subsetting the results to working papers only.")
