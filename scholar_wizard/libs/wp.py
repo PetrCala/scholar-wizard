@@ -144,8 +144,7 @@ def subset_search_results_to_wps(
 
         # Fetch the full "fill" to get more metadata (volume, issue, pages, doi,...)
         logger.debug(f"Filling publication: {pub_title}")
-        pub_filled = search_results.pub_parser.fill(pub)
-        pub_filled_dict = pub_filled.__dict__
+        pub_filled_dict = search_results.pub_parser.fill(pub)
         time.sleep(0.2)
 
         if not is_likely_published(pub_filled_dict):
