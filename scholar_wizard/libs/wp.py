@@ -149,6 +149,10 @@ def subset_search_results_to_wps(
 
         if not is_likely_published(pub_filled_dict):
             working_papers.append(pub_filled_dict)
+        else:
+            logger.debug(
+                f"The following paper has been published: {pub_title}. Skipping."
+            )
 
         count += 1
         if count >= max_results:
