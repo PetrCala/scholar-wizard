@@ -59,7 +59,7 @@ def search_google_scholar(
     if working_papers_only:
         logger.debug("Subsetting the results to working papers only.")
         search_results = subset_search_results_to_wps(
-            search_results=search_results, max_results=1000
+            search_results=search_results, max_results=3000
         )
         logger.info(f"Found {len(search_results)} working papers")
 
