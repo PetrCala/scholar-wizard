@@ -8,4 +8,4 @@ def setup_proxy() -> None:
     pg = ProxyGenerator()
     # pg.Tor_Internal(tor_cmd="/Applications/Tor Browser.app/Contents/MacOS/Tor/tor")
     pg.FreeProxies()
-    scholarly.use_proxy(pg)
+    scholarly.use_proxy(pg, pg)

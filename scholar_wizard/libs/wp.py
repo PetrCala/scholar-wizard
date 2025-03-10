@@ -17,6 +17,7 @@ def check_doi_resolution(doi: str) -> bool:
     }
 
     try:
+        logger.debug(f"Checking DOI resolution for: {doi}")
         response = requests.get(api_url, headers=headers, timeout=10)
         time.sleep(0.2)
 
