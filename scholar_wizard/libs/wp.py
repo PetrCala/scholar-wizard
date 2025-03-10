@@ -18,7 +18,7 @@ def check_doi_resolution(doi: str) -> bool:
 
     try:
         response = requests.get(api_url, headers=headers, timeout=10)
-        time.sleep(0.1)
+        time.sleep(0.2)
 
         if response.status_code == 200:
             data = response.json()
@@ -146,7 +146,7 @@ def subset_search_results_to_wps(
         logger.debug(f"Filling publication: {pub_title}")
         try:
             pub_filled_dict = search_results.pub_parser.fill(pub)
-            time.sleep(0.1)
+            time.sleep(0.2)
 
             if not is_likely_published(pub_filled_dict):
                 working_papers.append(pub_filled_dict)
