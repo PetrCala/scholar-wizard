@@ -16,6 +16,7 @@ def search_google_scholar(
     year_to: int = None,
     save_results_to_pdf: bool = False,
     output_path: str = None,
+    max_count: int = None,
     max_pdf_downloads: int = STATIC.MAX_PDF_DOWNLOADS_DEFAULT,
     working_papers_only: bool = False,
 ) -> pd.DataFrame:
@@ -30,6 +31,7 @@ def search_google_scholar(
     - year_to (int, optional): The ending year for the search (default: None).
     - save_results_to_pdf (bool, optional): Whether to download available PDFs (default: False).
     - output_path (str, optional): Directory where PDFs should be saved (default: None).
+    - max_count (int, optional): The maximum number of search results to return (default: None).
     - max_pdf_downloads (int, optional): The maximum number of PDF files to download per journal/search (default: 50).
     - working_papers_only (bool, optional): Whether to only search for working papers (default: False).
 
@@ -65,6 +67,7 @@ def search_google_scholar(
 
     results = []
     pdf_count = 0
+    max_count = 0
 
     if save_results_to_pdf:
         assert isinstance(
@@ -142,6 +145,10 @@ def search_google_scholar(
 
         # Append to results
         results.append(row)
+
+        count += 1
+        if count >= max_count:
+            break
 
     # Convert the list of results into a DataFrame
     df = pd.DataFrame(results, columns=STATIC.STUDY_DF_COLUMNS)

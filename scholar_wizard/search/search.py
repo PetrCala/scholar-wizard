@@ -21,6 +21,7 @@ def search(
     save_results_to_pdf: bool = True,
     use_proxy: bool = True,
     working_papers_only: bool = False,
+    max_count: int = None,
     max_pdf_downloads: int = STATIC.MAX_PDF_DOWNLOADS_DEFAULT,
     date_format: str = STATIC.DATE_FORMAT,
 ) -> pd.DataFrame:
@@ -38,6 +39,7 @@ def search(
     - save_results_to_pdf (bool, optional): Whether to download available PDFs (default: True).
     - use_proxy (bool, optional): Whether to use a proxy server (default: True).
     - working_papers_only (bool, optional): Whether to search only working papers (default: False).
+    - max_count (int, optional): The maximum number of search results to return (default: None).
     - max_pdf_downloads (int, optional): The maximum number of PDF files to download per journal/search (default: 50).
     - date_format (str, optional): The date format to use for the output files.
 
@@ -76,6 +78,7 @@ def search(
     assert isinstance(
         working_papers_only, bool
     ), "The working_papers_only flag must be a boolean."
+    assert isinstance(max_count, (int, type(None))), "The max_count must be an integer."
     assert isinstance(
         max_pdf_downloads, int
     ), "The max_pdf_downloads must be an integer."
@@ -112,6 +115,7 @@ def search(
             year_to=year_to,
             save_results_to_pdf=save_results_to_pdf,
             output_path=output_path,
+            max_count=max_count,
             max_pdf_downloads=max_pdf_downloads,
             working_papers_only=working_papers_only,
         )
@@ -239,6 +243,12 @@ def add_arguments(parser):
         help="Flag to search only working papers (default: False).",
     )
     parser.add_argument(
+        "--max-count",
+        type=int,
+        default=None,
+        help="The maximum number of search results to return (default: None).",
+    )
+    parser.add_argument(
         "--max-pdf-downloads",
         type=int,
         default=STATIC.MAX_PDF_DOWNLOADS_DEFAULT,
@@ -274,6 +284,7 @@ def run(args):
         save_results_to_pdf=args.save_results_to_pdf,
         use_proxy=args.use_proxy,
         working_papers_only=args.working_papers_only,
+        max_count=args.max_count,
         max_pdf_downloads=args.max_pdf_downloads,
         date_format=args.date_format,
     )
