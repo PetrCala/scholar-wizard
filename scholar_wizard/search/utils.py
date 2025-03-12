@@ -67,7 +67,7 @@ def search_google_scholar(
 
     results = []
     pdf_count = 0
-    max_count = 0
+    total_count = 0
 
     if save_results_to_pdf:
         assert isinstance(
@@ -146,8 +146,8 @@ def search_google_scholar(
         # Append to results
         results.append(row)
 
-        count += 1
-        if count >= max_count:
+        total_count += 1
+        if total_count >= max_count:
             break
 
     # Convert the list of results into a DataFrame
